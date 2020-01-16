@@ -1,11 +1,14 @@
-import StickyHeader from './app/tools/StickyHeader.js';
+// ProtoTypes Util see app/protoTypes.js
+import protoTypes from './app/protoTypes.js';
 
-function init() {
+import surveyPagination from './app/enhancements/SurveyPagination.js';
+
+function init(event) {
   // Init Function called on DOM Content Loaded
 
-  // Create the Sticky Header
-  new StickyHeader(document.getElementsByClassName("c2-header")[0]);
-  console.log();
+  let surveys = new surveyPagination(document.getElementsByClassName("c2Survey--paginator"));
+
+  console.dir();
 }
 
-document.addEventListener('DOMContentLoaded', init());
+document.addEventListener('DOMContentLoaded', (e) => {init(e)});
