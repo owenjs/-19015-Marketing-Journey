@@ -1,0 +1,9 @@
+# Ignore all Node Module Files
+node_modules/
+
+# Ignore the Built app files
+app/
+# But do track the index html file
+!app/index.html
+# But do track the app folder in src
+!src/app/
