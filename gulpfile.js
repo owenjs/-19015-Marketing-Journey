@@ -67,7 +67,7 @@ var compileStyle = () => {
  *               re compiles and reloads broswer
  */
 var watchScript = () => {
-  gulp.watch("./src/app/**/*.js", gulp.series(compileScript, reload));
+  gulp.watch("./src/**/*.js", gulp.series(compileScript, reload));
 };
 
 /**

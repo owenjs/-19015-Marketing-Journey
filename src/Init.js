@@ -8,7 +8,7 @@ function init(event) {
 
   let surveys = new surveyPagination(document.getElementsByClassName("c2Survey--paginator"));
 
-  console.dir();
+  
 }
 
 document.addEventListener('DOMContentLoaded', (e) => {init(e)});

@@ -82,4 +82,17 @@ let htmlRegex = {
 
 }
 
+/**
+ * RegExp prototype forEachMatch - Loops through each regex match 
+ * and calls the call back method given 
+ * @param {string} string: The text being matched
+ * @param {function} fnCallBack: The function called for each match
+ */
+RegExp.prototype.forEachMatch = function (string, fnCallBack) {
+  let match;
+  while((match = this.exec(string)) !== null) {
+    fnCallBack(match);
+  }
+}
+
 export default htmlRegex;

@@ -33,7 +33,7 @@ export default class SurveyPagination extends Enhancement {
       // Replace the Heading Macro with the Group Title
       groupFragment.replace("$HEADING$", group.title);
       // Replace the Question Frag macro with the Questions
-      groupFragment.replace("$frag_QUESTIONS$", group.title);
+      groupFragment.replace("$frag_QUESTIONS$", group.questions);
 
       //groupFragment.fragsToAppend.forEach((fragToAppend) => {
         //fragToAppend.appendChildren(group.questions);
