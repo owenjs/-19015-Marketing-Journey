@@ -12,15 +12,22 @@ export default class Frag {
     this.init();
   }
 
+  /**
+   * init - Called After Constructor and Reset
+   */
   init() {
     let fragMacroRegex = htmlRegex.fragMacro();
-
     fragMacroRegex.forEachMatch(this.markup, (match) => {
+      // For each Macro Found in the Markup, replace it with a fragRef Markup
       this.replaceFragMacroWithRef(match);
     });
-    console.log();
   }
 
+  /**
+   * replaceFragMacroWithRef - Replaces a Frag Macro in the Markup with the fragRef markup
+   *  
+   * @param {obj} match: The macro Match container full macro and it's name
+   */
   replaceFragMacroWithRef(match) {
     let macro = match[0], macroName = match[1],
       fragRefMarkUp = this.fragRefMarkUp.replace("$MACRONAME$", macroName);
@@ -30,6 +37,11 @@ export default class Frag {
     this.addMacroReference(macroName);
   }
 
+  /**
+   * addMacroReference - Adds a macro reference to this.fragRefs, if not done already
+   *  
+   * @param {string} macroName: The Macro name being added
+   */
   addMacroReference(macroName) {
     if (this.fragRefs.macros.indexOf(macroName) == -1) {
       // If we don't already have this macro refereneced, add it
@@ -38,6 +50,12 @@ export default class Frag {
     }
   }
 
+  /**
+   * addToFragReference - Adds elements to the macro reference in this.fragRefs
+   *  
+   * @param {string} macroName: The Macro name which will reference the elements given
+   * @param {Array} replacement: An array of elements that will be replacing the fragRef
+   */
   addToFragReference(macroName, replacement) {
     if (this.fragRefs.macros.indexOf(macroName) == -1) {
       // If we don't have this macro referenced, return
@@ -48,17 +66,18 @@ export default class Frag {
   }
 
   /**
-   * Frag prototype reset - Resets this frag's markup to the original
+   * reset - Resets this frag's markup to the original and all frag references
    */
   reset() {
     this.markup = this.originalMarkup;
     this.fragRefs = {
       macros: [],
     };
+    this.init();
   }
 
   /**
-   * get print - Returns the DOM fragment for the frag
+   * get print - Returns the DOM fragment for the frag and frag macros replaced
    */
   get print() {
     // ToDo: Warn user for missing macros and frag macros
@@ -78,7 +97,7 @@ export default class Frag {
   /**
    * replace - Replaces a macro with the replacement given
    * @param {string} marco: The macro name to be replaced - could be a frag macro
-   * @param replacement: String or Fragment 
+   * @param replacement: String or Fragment which will replace the marco
    */
   replace(marco, replacement) {
     let fragMacroReplace = htmlRegex.fragMacro().test(marco);

@@ -1,0 +1,44 @@
+.ig-page--marketing-survey {
+  .main {
+    height: 100vh;
+    width: 100vw;
+    &__background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("http://f.intergagecouk.1-20-7.b01.co.uk/p/1/survey-background.svg");
+      background-size: 100%;
+      z-index: -1;
+      //animation: animatedBackground 5s linear infinite;
+    }
+
+    .question-group {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: -100%;
+      &:first-of-type {
+        left: 0;
+      }
+      display: flex;
+      flex-direction: column;
+      padding: 0 5rem;
+      &__heading {
+        flex: 0 0 20%;
+        display: flex;
+        align-items: center;
+      }
+      &__questions {
+        flex: 0 0 80%;
+      }
+    }
+  }
+}
+
+@keyframes animatedBackground {
+	from { background-position: 0 center; }
+	to { background-position: 100vw center; }
+}

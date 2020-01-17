@@ -1,59 +1,62 @@
 import Enhancement from '../enhancement.js'
 import util from '../util.js';
 import Frag from '../tools/Frag.js';
+import Dispatch from '../tools/Dispatch.js';
 
 export default class SurveyPagination extends Enhancement {
 
-  constructor(domSurveys) {
+  constructor(domSurvey) {
     super(); // Create 'this'
-    if (!domSurveys.length) {
-      console.log("No Surveys to Paginate 'src/app/enhancements/SurveyPagination.js'");
+    if (!domSurvey) {
+      console.log("No Survey to Paginate 'src/app/enhancements/SurveyPagination.js'");
       return;
     }
-    // Build the Surveys MetaData from the HTML collections
-    this.surveys = this._findSurveys(domSurveys);
+    // Build the Survey MetaData from the HTMLElement
+    this.survey = this.findSurvey(domSurvey);
+    this.domRender = document.createDocumentFragment();
+    this.loaded = false;
     // Request the Survey Group Markup
     util.localRequest("/p/1/question-group-markup.html", (markup) => {
       // When Fetched Build the Surveys from the MetaData and Markup
-      this.buildSurveys(markup);
+      this.buildSurvey(markup);
     });
-    
+
 
   }
 
-  buildSurveys(markup) {
-    let main = document.getElementsByClassName("main")[0];
+  render(elementToAppend) {
+    if (!this.elementToAppend && elementToAppend) {
+      this.elementToAppend = elementToAppend;
+    }
+    if (!this.loaded || !this.elementToAppend) {
+      return;
+    }
+    console.log("Survey rendered 'src/app/enhancements/SurveyPagination.js'")
+    this.elementToAppend.appendChild(this.domRender);
+    // Dispatch Listener Group, so next actions can take place
+    Dispatch.dispatch("SURVEY_BUILT");
+  }
 
-    this.surveys.forEach((survey) => {survey.forEach((group) => {
-      if (group.title == "") {return} // Skip for Now
-      // For each Group in each Survey
+  buildSurvey(markup) {
+    this.survey.forEach((group) => {
+      if (group.title == "") { return } // Skip for Now
 
-      
+      // For each Group
       let groupFragment = new Frag(markup);
       // Replace the Heading Macro with the Group Title
       groupFragment.replace("$HEADING$", group.title);
       // Replace the Question Frag macro with the Questions
       groupFragment.replace("$frag_QUESTIONS$", group.questions);
 
-      //groupFragment.fragsToAppend.forEach((fragToAppend) => {
-        //fragToAppend.appendChildren(group.questions);
-      //});
-
-      main.appendChild(groupFragment.print);
-    })});
-  }
-
-  _findSurveys(domSurveys) {
-    let surveys = [];
-    // Build Each Survey
-    domSurveys.forEach((domSurvey) => {
-      surveys.push(this._findSurvey(domSurvey));
+      this.domRender.appendChild(groupFragment.print);
     });
-    console.log("Surveys built 'src/app/enhancements/SurveyPagination.js'")
-    return surveys;
+    console.log("Survey built 'src/app/enhancements/SurveyPagination.js'")
+    // ToDo: Get the Survey Submit Button from the Markup
+    this.loaded = true;
+    this.render();
   }
 
-  _findSurvey(domSurvey) {
+  findSurvey(domSurvey) {
     let survey = [],
       // Find the Survey Groups in the Survey
       domGroups = domSurvey.findChildrenByClassName("c2form_fieldset");
@@ -73,6 +76,9 @@ export default class SurveyPagination extends Enhancement {
         questions: group.findChildrenByClassName("c2form_row"),
       });
     });
+    // Remove the original Form Container from the DOM, we've got everything we need from it
+    domSurvey.findChildrenByClassName("c2form_container").forEach((el) => {el.remove()});
+    console.log("Survey found 'src/app/enhancements/SurveyPagination.js'")
     return survey;
   }
 
