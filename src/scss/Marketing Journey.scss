@@ -20,8 +20,12 @@
       height: 100%;
       top: 0;
       left: -100%;
-      &:first-of-type {
-        left: 0;
+      &.active {
+        left: 0%;
+        animation: fromRight 0.5s;
+      }
+      &.inactive {
+        animation: off 0.5s;
       }
       display: flex;
       flex-direction: column;
@@ -41,4 +45,14 @@
 @keyframes animatedBackground {
 	from { background-position: 0 center; }
 	to { background-position: 100vw center; }
+}
+
+@keyframes fromRight {
+  from {left: 100%}
+  to {left: 0%;}
+}
+
+@keyframes off {
+  from {left: 0%}
+  to {left: -100%;}
 }

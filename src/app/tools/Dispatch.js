@@ -30,11 +30,8 @@ class Dispatchx {
   }
 
 }
-
 if (!window.Dispatch) {
   window.Dispatch = new Dispatchx()
 }
-
-
-// Singleton!
+// Watch out it's a Singleton!
 export default window.Dispatch;
