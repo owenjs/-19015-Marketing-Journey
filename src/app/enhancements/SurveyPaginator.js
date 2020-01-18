@@ -35,6 +35,7 @@ export default class SurveyPagination extends Enhancement {
     this.elementToAppend.appendChild(this.domRender);
     // Dispatch Listener Group, so next actions can take place
     Dispatch.dispatch("SURVEY_BUILT");
+    
   }
 
   buildSurvey(markup) {
