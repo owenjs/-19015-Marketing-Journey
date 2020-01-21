@@ -40,7 +40,7 @@ HTMLElement.prototype.appendChildren = function (children) {
  * @param {fn} callBack: The function call back for each element
  */
 HTMLCollection.prototype.forEach = function (callBack) {
-  Array.prototype.slice.call(this).forEach((el) => {callBack(el)});
+  Array.prototype.slice.call(this).forEach((el, id) => {callBack(el, id)});
 }
 
 /**

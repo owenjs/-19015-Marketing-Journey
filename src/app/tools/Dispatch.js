@@ -20,12 +20,12 @@ class Dispatchx {
     this.dispatchGroups[group] = [];
   }
 
-  dispatch(group) {
+  dispatch(group, dispatchInfo) {
     if (this.dispatchGroups.groups.indexOf(group) == -1) {
       return;
     }
     this.dispatchGroups[group].forEach((fnDispatch) => {
-      fnDispatch(group);
+      fnDispatch(dispatchInfo);
     });
   }
 

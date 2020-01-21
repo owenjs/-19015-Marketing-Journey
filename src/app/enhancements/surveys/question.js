@@ -1,44 +1,91 @@
+import Option from './option.js';
+import Frag from '../../tools/Frag.js';
+
+const questionMarkup = "<section class='c2form_slider'><div class='c2form_slider__range'>$frag_RANGES$</div></section>";
+
 export default class Question {
 
-  constructor(options, callBacks) {
-    this.callBacks = callBacks;
-    this.options = options;
-    this.setMinMax();
-    this.rangeFragment = this.buildRanges();
+  constructor(domQuestion, classInfo) {
+    this.classInfo = classInfo;
+
+    // Find the Options for this Question
+    this.container = domQuestion;
+    this.options = this.findOptions(domQuestion);
+    this.activeOption = 0;
+    // ToDo: Find the Min and Max for the Question
   }
 
-  setMinMax() {
-    // Find the Min and Max for this question
-    if(this.options[0].label.innerHTML.match(/^(\d+).*$/)) {
-      this.min = RegExp.$1;
-      this.max = this.options.length - ( 1 - this.min );
-    }
+  get render() {
+    let questionFragment = new Frag(questionMarkup),
+      optionFrags = [];
+    
+    // Render each Option
+    this.options.forEach((option) => {
+      optionFrags.push(option.render);
+    });
+    // Replace the ranges frag with the options
+    questionFragment.replace("$frag_RANGES$", optionFrags);
+
+    // Append the newly built ranges into the question container
+    let inputCont = this.container.findChildrenByClassName("c2form_input")[0];
+    inputCont.appendChild(questionFragment.print);
+
+    return this.container;
   }
 
-  buildRanges() {
-    let ranges = [];
-
-    for(let i = this.min; i <= this.max; i++) {
-      let range = String.prototype.toFrag("<span>" + i + "</span>");
-      // Add click listener for Each Range
-      range.children[0].addEventListener('click', (e) => {
-        this.handleRangeChange(e.currentTarget, i);
+  findOptions(domQuestion) {
+    // Get the radio Buttons out of the markup
+    let radioBtns = domQuestion.findChildrenByClassName("c2form_radio")[0].children,
+      options = [];
+    
+    radioBtns.forEach((radioBtn, id) => {
+      // ToDo: Dynamic Ranges, not always starting from 0
+      let option = new Option(id, {
+        fnUpdateActive: (option) => {this.updateActive(option)},
       });
-      ranges.push(range);
-    }
-    return ranges;
+      // This contains the Input and Label, wrapped in Spans
+      let container = radioBtn.children[0].children;
+      // Get the Input and Label Out, always in the same place
+      option.input = container[0].firstChild;
+      option.label = container[1].firstChild;
+      options.push(option);
+    });
+    return options;
   }
 
-  handleRangeChange(range, id) {
-    this.options[id].check();
+  setRefs(domQuestion) {
+    this.domRef = domQuestion;
+    let domOptions = domQuestion.findChildrenByClassName("c2form_slider__range")[0].children;
+    domOptions.forEach((domOption, id) => {
+      this.options[id].setRefs(domOption);
+    });
+  }
 
-    if (this.currentAnswer) {
-      this.currentAnswer.className = "";
+  setActiveState() {
+    this.domRef.classList.remove("inactive");
+    this.domRef.classList.add("active");
+  }
+
+  removeActiveState() {
+    this.domRef.classList.remove("active");
+    this.domRef.classList.add("inactive");
+  }
+
+  next() {
+    this.removeActiveState();
+    // Notify the Group Parent
+    this.classInfo.fnUpdateActive();
+  }
+
+  updateActive(option) {
+    // Uncheck the Previous Option
+    if (this.activeOption) {
+      this.activeOption.unCheck();
     }
-    this.currentAnswer = range;
-    this.currentAnswer.className = "c2form_slider__range__current";
-    console.log(`Range Change ${id}`);
-    this.callBacks.fnNext();
+    // Update the Active Option
+    this.activeOption = option;
+    // Move onto the Next Question
+    this.next();
   }
 
 }

@@ -1,6 +1,7 @@
 // ProtoTypes Util see app/protoTypes.js
 import protoTypes from './app/protoTypes.js';
 
+import Survey from './app/enhancements/survey.js';
 import SurveyPaginator from './app/enhancements/SurveyPaginator.js';
 import SurveySliders from './app/enhancements/SurveySliders.js';
 import Dispatch from './app/Tools/Dispatch.js';
@@ -15,7 +16,8 @@ function init(event) {
   let domSurveys = document.getElementsByClassName("c2Survey--paginator");
 
   domSurveys.forEach((domSurvey) => {
-    let survey = new SurveyPaginator(domSurvey);
+    let survey = new Survey(domSurvey);
+    //let survey = new SurveyPaginator(domSurvey);
     // Add the New Created Survey to the Form
     // ToDo: use set functions
     survey.render(domSurvey.querySelector("form"));
