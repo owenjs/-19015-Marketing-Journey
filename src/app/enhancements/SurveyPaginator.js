@@ -14,13 +14,15 @@ export default class SurveyPagination extends Enhancement {
     // Build the Survey MetaData from the HTMLElement
     this.survey = this.findSurvey(domSurvey);
     this.domRender = document.createDocumentFragment();
-    this.loaded = false;
     // Request the Survey Group Markup
     util.localRequest("/p/1/question-group-markup.html", (markup) => {
       // When Fetched Build the Surveys from the MetaData and Markup
       this.buildSurvey(markup);
     });
 
+    // Add Dispatch Listeners
+    Dispatch.addToDispatchGroup("SURVEY_GROUP_NEXT", (dispatchInfo) => {this.next(dispatchInfo)});
+    Dispatch.addToDispatchGroup("SURVEY_GROUP_BACK", (dispatchInfo) => {this.back(dispatchInfo)});
 
   }
 
@@ -33,9 +35,11 @@ export default class SurveyPagination extends Enhancement {
     }
     console.log("Survey rendered 'src/app/enhancements/SurveyPagination.js'")
     this.elementToAppend.appendChild(this.domRender);
+    this.domQuestionGroups = document.getElementsByClassName("question-group");
+    this.activeGroup = 0;
+    this.domQuestionGroups[this.activeGroup].classList.add("active");
     // Dispatch Listener Group, so next actions can take place
     Dispatch.dispatch("SURVEY_BUILT");
-    
   }
 
   buildSurvey(markup) {
@@ -81,6 +85,14 @@ export default class SurveyPagination extends Enhancement {
     domSurvey.findChildrenByClassName("c2form_container").forEach((el) => {el.remove()});
     console.log("Survey found 'src/app/enhancements/SurveyPagination.js'")
     return survey;
+  }
+
+  next() {
+    this.domQuestionGroups[this.activeGroup].classList.remove("active");
+    this.domQuestionGroups[this.activeGroup].classList.add("inactive");
+    this.activeGroup++;
+    this.domQuestionGroups[this.activeGroup].classList.remove("inactive");
+    this.domQuestionGroups[this.activeGroup].classList.add("active");
   }
 
 }

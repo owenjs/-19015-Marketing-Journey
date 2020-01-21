@@ -121,14 +121,14 @@ export default class Frag {
 /**
  * String prototype toFrag - Turns a string into a dom fragment
  */
-String.prototype.toFrag = function () {
+String.prototype.toFrag = function (string) {
   // FYI: createDocumentFragment
   // A newly created, empty, DocumentFragment object, 
   // which is ready to have nodes inserted into it.
   var frag = document.createDocumentFragment(),
     tmp = document.createElement('body'), 
     child;
-  tmp.innerHTML = this;
+  tmp.innerHTML = (string) ? string : this;
   // Append elements in a loop to a DocumentFragment, so that the browser does
   // not re-render the document for each node
   while(child = tmp.firstChild) {

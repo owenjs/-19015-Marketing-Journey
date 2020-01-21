@@ -37,6 +37,20 @@
       }
       &__questions {
         flex: 0 0 80%;
+        position: relative;
+        overflow: hidden;
+        .c2form_row {
+          position: absolute;
+          left: -100%;
+          top: 20%;
+          &.active {
+            left: 0%;
+            animation: fromRight 0.5s;
+          }
+          &.inactive {
+            animation: off 0.5s;
+          }
+        }
       }
     }
   }

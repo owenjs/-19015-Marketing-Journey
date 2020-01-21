@@ -1,6 +1,8 @@
 import Enhancement from '../enhancement.js'
 import util from '../util.js';
 import Frag from '../tools/Frag.js';
+import Question from './surveys/question.js';
+import Option from './surveys/option.js';
 
 export default class SurveySliders extends Enhancement {
 
@@ -11,7 +13,10 @@ export default class SurveySliders extends Enhancement {
       return;
     }
     this.domSliders = domSliders;
+    this.activeQuestion = 0;
+    this.domSliders[this.activeQuestion].classList.add("active");
     this.questions = this.findQuestions(domSliders);
+    this.sliders = [];
     // Request the Survey Group Markup
     util.localRequest("/p/1/survey-slider-markup.html", (markup) => {
       // When Fetched Build the Surveys from the MetaData and Markup
@@ -21,40 +26,15 @@ export default class SurveySliders extends Enhancement {
 
   buildSliders(markup) {
     this.questions.forEach((question, id) => {
-      let sliderMin, sliderMax;
-      // Find the Min and Max for this question
-      if(question[0].label.innerHTML.match(/^(\d+).*$/)) {
-        sliderMin = RegExp.$1;
-        sliderMax = question.length - ( 1 - sliderMin );
-      }
 
-      //let ranges = this.buildRanges(sliderMin, sliderMax);
-      // ToDo:
-      return;
-
-      // Create a Slider for Each Question
-      let sliderFragment = new Frag(markup);
+      // Build the Questions from the Markup given
+      let questionFragment = new Frag(markup);
       // Replace the ranges frag with the ranges
-      sliderFragment.replace("$frag_RANGES$", ranges);
+      questionFragment.replace("$frag_RANGES$", question.rangeFragment);
 
       let inputCont = this.domSliders[id].findChildrenByClassName("c2form_input")[0];
-      inputCont.appendChild(sliderFragment.print);
+      inputCont.appendChild(questionFragment.print);
     });
-  }
-
-  buildRanges(min, max) {
-    let ranges = [];
-
-    for(let i = min; i <= max; i++) {
-      let range = frag.createFromString("<span>" + i + "</span>");
-      // Add click listener for Each Range
-      range.children[0].dataset.value = i;
-      range.children[0].addEventListener('click', function(e) {
-        _this.handleRangeChange(e.currentTarget);
-      });
-      ranges.push(range);
-    }
-    return ranges;
   }
 
   findQuestions(domSliders) {
@@ -63,25 +43,40 @@ export default class SurveySliders extends Enhancement {
     // Go through each of the Survery Sliders and grab the Input and Label out
     domSliders.forEach((slider) => {
       let radioBtn = slider.findChildrenByClassName("c2form_radio");
-      let answers = this.findAnswers(radioBtn[0].children);
-      questions.push(answers);
+      let options = this.findOptions(radioBtn[0].children);
+      questions.push(new Question(options, {
+        fnNext: () => {this.next()},
+        fnBack: () => {this.back()},
+      }));
     });
 
     return questions;
   }
 
-  findAnswers(radioBtns) {
-    let answers = [];
+  findOptions(radioBtns) {
+    let options = [];
     radioBtns.forEach((radioBtn) => {
-      let answer = {};
+      let option = new Option();
       // This contains the Input and Label, wrapped in Spans
       let container = radioBtn.children[0].children;
       // Get the Input and Label Out, always in the same place
-      answer.input = container[0].firstChild;
-      answer.label = container[1].firstChild;
-      answers.push(answer);
+      option.input = container[0].firstChild;
+      option.label = container[1].firstChild;
+      options.push(option);
     });
-    return answers;
+    return options;
+  }
+
+  next() {
+    this.domSliders[this.activeQuestion].classList.remove("active");
+    this.domSliders[this.activeQuestion].classList.add("inactive");
+    this.activeQuestion++;
+    this.domSliders[this.activeQuestion].classList.remove("inactive");
+    this.domSliders[this.activeQuestion].classList.add("active");
+  }
+
+  back() {
+
   }
 
 }
