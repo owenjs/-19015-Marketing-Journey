@@ -1,11 +1,13 @@
 import Option from './option.js';
 import Frag from '../../tools/Frag.js';
+import Enhancement from '../../enhancement.js';
 
-const questionMarkup = "<section class='c2form_slider'><div class='c2form_slider__range'>$frag_RANGES$</div></section>";
+const questionMarkup = "<div class='c2form_row__range'>$frag_OPTIONS$</div>";
 
-export default class Question {
+export default class Question extends Enhancement {
 
   constructor(domQuestion, classInfo) {
+    super(); // Create 'this'
     this.classInfo = classInfo;
 
     // Find the Options for this Question
@@ -15,29 +17,37 @@ export default class Question {
     // ToDo: Find the Min and Max for the Question
   }
 
-  get render() {
-    let questionFragment = new Frag(questionMarkup),
-      optionFrags = [];
+  /**
+   * render - Renders this class from a DOMFragment
+   * @return {DOMElement} this.container: Render DOMFragment for this class
+   */
+  render() {
+    let questionFragment = new Frag(questionMarkup), optionFrags = [];
     
     // Render each Option
     this.options.forEach((option) => {
-      optionFrags.push(option.render);
+      optionFrags.push(option.render());
     });
-    // Replace the ranges frag with the options
-    questionFragment.replace("$frag_RANGES$", optionFrags);
+    // Replace the option frag macro with the options we have rendered
+    questionFragment.replace("$frag_OPTIONS$", optionFrags);
 
     // Append the newly built ranges into the question container
     let inputCont = this.container.findChildrenByClassName("c2form_input")[0];
-    inputCont.appendChild(questionFragment.print);
+    inputCont.appendChild(questionFragment.render);
 
     return this.container;
   }
 
+  /**
+   * findOptions - Find the available options in the DOM element given
+   * @param {HTMLElement} domQuestion: The DOM element for this question
+   * @return {array} options: An array of option classes
+   */
   findOptions(domQuestion) {
-    // Get the radio Buttons out of the markup
-    let radioBtns = domQuestion.findChildrenByClassName("c2form_radio")[0].children,
-      options = [];
-    
+    // Get the radio Buttons out of the DOM Element
+    let radioBtns = domQuestion.findChildrenByClassName("c2form_radio")[0].children;
+    let options = [];
+    // For each radio button get the Input and Label out
     radioBtns.forEach((radioBtn, id) => {
       // ToDo: Dynamic Ranges, not always starting from 0
       let option = new Option(id, {
@@ -53,30 +63,30 @@ export default class Question {
     return options;
   }
 
+  /**
+   * setRefs - Sets relevant references for this class 
+   * @param {HTMLElement} domQuestion: The Rendered DOM element for this question
+   */
   setRefs(domQuestion) {
     this.domRef = domQuestion;
-    let domOptions = domQuestion.findChildrenByClassName("c2form_slider__range")[0].children;
+    let domOptions = domQuestion.findChildrenByClassName("c2form_row__range")[0].children;
     domOptions.forEach((domOption, id) => {
       this.options[id].setRefs(domOption);
     });
   }
 
-  setActiveState() {
-    this.domRef.classList.remove("inactive");
-    this.domRef.classList.add("active");
-  }
-
-  removeActiveState() {
-    this.domRef.classList.remove("active");
-    this.domRef.classList.add("inactive");
-  }
-
+  /**
+   * next - Removes our Active state, and asks parent to update the active state
+   */
   next() {
     this.removeActiveState();
     // Notify the Group Parent
     this.classInfo.fnUpdateActive();
   }
 
+  /**
+   * updateActive - Updates the active question option
+   */
   updateActive(option) {
     // Uncheck the Previous Option
     if (this.activeOption) {

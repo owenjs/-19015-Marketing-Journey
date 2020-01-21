@@ -9,18 +9,27 @@ export default class Option {
     this.callBacks = callBacks;
   }
 
-  get render() {
+  /**
+   * render - Renders this class from a DOMFragment
+   */
+  render() {
+    // Create the Fragment from the Markup
     let optionFrag = new Frag(optionMarkup);
+    // Replace the Value with this option value
     optionFrag.replace("$VALUE$", this.value);
-
-    let optionRender = optionFrag.print;
-    optionRender.firstElementChild.addEventListener('click', (e) => {
-      this.handleClick(e.currentTarget);
+    // Render the Frag
+    let optionRender = optionFrag.render;
+    // Add the click handler
+    optionRender.firstElementChild.addEventListener('click', () => {
+      this.handleClick();
     });
     return optionRender;
   }
 
-  handleClick(option) {
+  /**
+   * handleClick - Click handle for the Question Option
+   */
+  handleClick() {
     // Check the radio button we are representing
     this.check();
 
@@ -28,17 +37,26 @@ export default class Option {
     this.callBacks.fnUpdateActive(this);
   }
 
+  /**
+   * check - Checks the Radio button, and adds class name on the dom ref
+   */
   check() {
     this.input.checked = true;
-    this.domRef.classList.add("c2form_slider__range__current");
+    this.domRef.classList.add("c2form_row__range__current");
   }
 
+  /**
+   * unCheck - Removes the current class name on this span
+   * No need to Uncheck the Radio Button though, HTML already does this
+   */
   unCheck() {
-    // No need to Uncheck the Radio Button, HTML already does this
-    // But do update the Class List
-    this.domRef.classList.remove("c2form_slider__range__current");
+    this.domRef.classList.remove("c2form_row__range__current");
   }
 
+  /**
+   * setRefs - Sets relevant references for this class 
+   * @param {HTMLElement} domOption: The Rendered DOM reference for this option
+   */
   setRefs(domOption) {
     this.domRef = domOption;
   }

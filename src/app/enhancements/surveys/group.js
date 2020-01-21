@@ -1,11 +1,13 @@
 import Question from './question.js';
 import Frag from '../../tools/Frag.js';
+import Enhancement from '../../enhancement.js';
 
-const groupMarkup = "<section class='question-group'><div class='question-group__heading'><h1>$HEADING$</h1></div><div class='question-group__questions'>$frag_QUESTIONS$</div></section>";
+const groupMarkup = "<section class='question-group'><div class='question-group__heading'><h1>$HEADING$</h1></div><div class='question-group__questions'><div>$frag_QUESTIONS$</div></div></section>";
 
-export default class Group {
+export default class Group extends Enhancement {
 
   constructor(title, domQuestions, classInfo) {
+    super(); // Create 'this'
     this.title = title;
     this.questions = this.buildQuestions(domQuestions);
     this.classInfo = classInfo;
@@ -21,13 +23,13 @@ export default class Group {
     // Render each Question in the group
     let questionFrags = [];
     this.questions.forEach((question) => {
-      questionFrags.push(question.render);
+      questionFrags.push(question.render());
     });
     // Replace the Question Frag macro with the Questions
     groupFrag.replace("$frag_QUESTIONS$", questionFrags);
 
     // Return the Render Group Fragment
-    return groupFrag.print;
+    return groupFrag.render;
   }
 
   setRefs(domQuestionGroup) {
@@ -55,29 +57,21 @@ export default class Group {
   }
 
   updateActive() {
-    this.activeQuestion++;
 
-    this.questions[this.activeQuestion].setActiveState();
     if (this.questions[this.activeQuestion].classInfo.last) {
       // Move onto Next group after the last question has been answered
       this.next();
+      return;
     }
+
+    this.activeQuestion++;
+    this.questions[this.activeQuestion].setActiveState();
   }
 
   next() {
     this.removeActiveState();
     // Notify the Group Parent
     this.classInfo.fnUpdateActive();
-  }
-
-  setActiveState() {
-    this.domRef.classList.remove("inactive");
-    this.domRef.classList.add("active");
-  }
-
-  removeActiveState() {
-    this.domRef.classList.remove("active");
-    this.domRef.classList.add("inactive");
   }
 
 }

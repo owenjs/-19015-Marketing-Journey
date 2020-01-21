@@ -77,9 +77,9 @@ export default class Frag {
   }
 
   /**
-   * get print - Returns the DOM fragment for the frag and frag macros replaced
+   * get render - Returns the DOM fragment for the frag and frag macros replaced
    */
-  get print() {
+  get render() {
     // ToDo: Warn user for missing macros and frag macros
     let markupFrag = this.markup.toFrag();
 
