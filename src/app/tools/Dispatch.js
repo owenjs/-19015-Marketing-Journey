@@ -22,6 +22,7 @@ class Dispatchx {
 
   dispatch(group, dispatchInfo) {
     if (this.dispatchGroups.groups.indexOf(group) == -1) {
+      console.log(`No Dispatch group for ${group}`);
       return;
     }
     this.dispatchGroups[group].forEach((fnDispatch) => {

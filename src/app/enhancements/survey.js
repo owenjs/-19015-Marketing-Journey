@@ -6,9 +6,10 @@ export default class Survey extends Enhancement {
   constructor(domSurvey) {
     super(); // Create 'this'
     if (!domSurvey) {
-      console.log("No Survey to Paginate 'src/app/enhancements/SurveyPagination.js'");
+      console.log("No Survey");
       return;
     }
+
     this.survey = {
       groups: this.findGroups(domSurvey),
       activeGroup: 0,

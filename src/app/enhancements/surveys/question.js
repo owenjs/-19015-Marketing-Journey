@@ -70,6 +70,7 @@ export default class Question extends Enhancement {
   setRefs(domQuestion) {
     this.domRef = domQuestion;
     let domOptions = domQuestion.findChildrenByClassName("c2form_row__range")[0].children;
+    // Pass the Reference for each Option to the Option classes
     domOptions.forEach((domOption, id) => {
       this.options[id].setRefs(domOption);
     });

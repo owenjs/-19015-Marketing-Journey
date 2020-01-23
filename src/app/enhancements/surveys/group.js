@@ -2,7 +2,7 @@ import Question from './question.js';
 import Frag from '../../tools/Frag.js';
 import Enhancement from '../../enhancement.js';
 
-const groupMarkup = "<section class='question-group'><div class='question-group__heading'><h1>$HEADING$</h1></div><div class='question-group__questions'><div>$frag_QUESTIONS$</div></div></section>";
+const groupMarkup = "<section class='question-group'><div class='question-group__heading'><h1>$HEADING$</h1></div><div class='question-group__questions'><div class='question-group__questions__container'><div class='arrow-left'></div>$frag_QUESTIONS$<div class='arrow-right'></div></div></div></section>";
 
 export default class Group extends Enhancement {
 
@@ -30,18 +30,6 @@ export default class Group extends Enhancement {
 
     // Return the Render Group Fragment
     return groupFrag.render;
-  }
-
-  setRefs(domQuestionGroup) {
-    this.domRef = domQuestionGroup;
-    let domQuestions = domQuestionGroup.findChildrenByClassName("c2form_row");
-    domQuestions.forEach((domQuestion, id) => {
-      this.questions[id].setRefs(domQuestion);
-      if (id == 0) {
-        this.questions[id].setActiveState();
-        this.activeQuestion = 0;
-      }
-    });
   }
 
   buildQuestions(domQuestions) {
@@ -72,6 +60,18 @@ export default class Group extends Enhancement {
     this.removeActiveState();
     // Notify the Group Parent
     this.classInfo.fnUpdateActive();
+  }
+
+  setRefs(domQuestionGroup) {
+    this.domRef = domQuestionGroup;
+    let domQuestions = domQuestionGroup.findChildrenByClassName("c2form_row");
+    domQuestions.forEach((domQuestion, id) => {
+      this.questions[id].setRefs(domQuestion);
+      if (id == 0) {
+        this.questions[id].setActiveState();
+        this.activeQuestion = 0;
+      }
+    });
   }
 
 }
