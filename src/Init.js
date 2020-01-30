@@ -14,30 +14,9 @@ function init(event) {
   // Render the Survey into the exciting Form on the page
   survey.render(domSurvey.querySelector("form"));
 
-  paginateSurvey(domSurvey);
-
   // Grab the Group Switcher
   let domGroupSwitcher = document.querySelector(".marketing-survey__group-shifter");
   let groupSwitcher = new GroupSwitcher(domGroupSwitcher);
-}
-
-function paginateSurvey(domSurvey) {
-  let survey = {};
-
-  let domSurveyGroups = domSurvey.querySelectorAll(".question-group");
-  survey.groupController = new ActiveStateMachine(domSurveyGroups);
-
-  domSurveyGroups.forEach((domSurveyGroup) => {
-
-    survey.questionController = new ActiveStateMachine(
-      domSurveyGroup.querySelectorAll(".c2form_row"), 
-      {
-        container: domSurveyGroup.querySelector(".question-group__questions__container"),
-        complete: () => { survey.groupController.next() },
-      },
-    );
-
-  });
 }
 
 document.addEventListener('DOMContentLoaded', (e) => {init(e)});

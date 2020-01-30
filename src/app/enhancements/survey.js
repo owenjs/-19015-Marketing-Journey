@@ -20,8 +20,9 @@ export default class Survey extends Enhancement {
     let domGroups = domSurvey.findChildrenByClassName("c2form_fieldset"),
       groups = [];
 
+    let id = 0;
     // Build Each Group
-    domGroups.forEach((group, id) => {
+    domGroups.forEach((group) => {
       // Find the group heading
       let legend = group.children[0],
         title = "";
@@ -35,9 +36,10 @@ export default class Survey extends Enhancement {
       }
 
       // Push this Group into the Survey Groups
-      groups.push(new Group(title, group.findChildrenByClassName("c2form_row"), {
-        fnUpdateActive: () => { this.updateActive() },
+      groups.push(new Group(title, id, group.findChildrenByClassName("c2form_row"), {
+        fnSetActive: (direction, id) => { this.setActive(direction, id) },
       }));
+      id++;
     });
     // Remove the original Form Container from the DOM, we've got everything we need from it
     domSurvey.findChildrenByClassName("c2form_container").forEach((el) => { el.remove() });
@@ -70,14 +72,37 @@ export default class Survey extends Enhancement {
     });
   }
 
-  updateActive() {
-    this.survey.activeGroup++;
+  // Direction can be 1 or -1 for Next or Back
+  setActive(direction, id) {
+    let jumpingTo = false;
+    if(id || id == 0) {
+      jumpingTo = true;
+    }
 
-    this.survey.groups[this.survey.activeGroup].setActiveState();
-    if (this.survey.groups[this.survey.activeGroup].classInfo.last) {
+    if (this.survey.groups[this.survey.activeGroup].classInfo.last && !jumpingTo) {
       // Submit the Survey on last group finish
       this.submitSurvey();
+      return;
     }
+
+    if (jumpingTo) {
+      // Override the Direction if needed
+      direction = ((id >= this.survey.activeGroup) ? 1 : -1);
+    }
+
+    // Make Current Inactive
+    this.survey.groups[this.survey.activeGroup].removeActiveState(direction);
+
+    if (jumpingTo) {
+      // Set the Active Group to the id given
+      this.survey.activeGroup = id;
+    } else {
+      // Else: move by one in the current direction
+      this.survey.activeGroup += direction;
+    }
+    
+    // Make Next or Previous Active
+    this.survey.groups[this.survey.activeGroup].setActiveState(direction);
   }
 
   submitSurvey() {

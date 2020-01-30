@@ -77,15 +77,6 @@ export default class Question extends Enhancement {
   }
 
   /**
-   * next - Removes our Active state, and asks parent to update the active state
-   */
-  next() {
-    this.removeActiveState();
-    // Notify the Group Parent
-    this.classInfo.fnUpdateActive();
-  }
-
-  /**
    * updateActive - Updates the active question option
    */
   updateActive(option) {
@@ -95,8 +86,8 @@ export default class Question extends Enhancement {
     }
     // Update the Active Option
     this.activeOption = option;
-    // Move onto the Next Question
-    this.next();
+    // Move onto the Next Question, 1 for forward
+    this.classInfo.fnSetActive(1);
   }
 
 }
