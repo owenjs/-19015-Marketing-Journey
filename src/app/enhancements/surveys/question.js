@@ -67,8 +67,11 @@ export default class Question extends Enhancement {
    * setRefs - Sets relevant references for this class 
    * @param {HTMLElement} domQuestion: The Rendered DOM element for this question
    */
-  setRefs(domQuestion) {
+  setRefs(domQuestion, domQuestionTick) {
     this.domRef = domQuestion;
+    this.tickRef = domQuestionTick;
+
+    // Find the Options in this Question
     let domOptions = domQuestion.findChildrenByClassName("c2form_row__range")[0].children;
     // Pass the Reference for each Option to the Option classes
     domOptions.forEach((domOption, id) => {
@@ -86,6 +89,7 @@ export default class Question extends Enhancement {
     }
     // Update the Active Option
     this.activeOption = option;
+    this.tickRef.classList.add("checked");
     // Move onto the Next Question, 1 for forward
     this.classInfo.fnSetActive(1);
   }

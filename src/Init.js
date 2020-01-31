@@ -3,10 +3,11 @@ import protoTypes from './app/protoTypes.js';
 
 import Survey from './app/enhancements/survey.js';
 import GroupSwitcher from './app/enhancements/groupSwitcher.js';
-import ActiveStateMachine from './app/tools/ActiveStateMachine.js';
+import LoadingPanel from './app/tools/LoadingPanel.js';
 
 function init(event) {
   // Init Function called on DOM Content Loaded
+  let loadingPanel = new LoadingPanel(document.querySelector(".c2-loading-panel"));
 
   let domSurvey = document.querySelector(".marketing-survey__form");
 
@@ -17,6 +18,9 @@ function init(event) {
   // Grab the Group Switcher
   let domGroupSwitcher = document.querySelector(".marketing-survey__group-shifter");
   let groupSwitcher = new GroupSwitcher(domGroupSwitcher);
+  
+  // When everything is done, Remove the Loading Panel
+  loadingPanel.setDone();
 }
 
 document.addEventListener('DOMContentLoaded', (e) => {init(e)});

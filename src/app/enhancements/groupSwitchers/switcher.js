@@ -10,9 +10,8 @@ export default class Switcher extends Enhancement {
     this.classInfo = classInfo;
 
     this.findGroupName();
-    this.addListener();
 
-    // ToDo: Listener for GROUP_CHANGE dispatcher, become active if necessary 
+    Dispatch.addToDispatchGroup('GROUP_CHANGE', (info) => { this.handleGroupSwitch(info) });
   }
 
   findGroupName() {
@@ -20,13 +19,10 @@ export default class Switcher extends Enhancement {
     this.title = title.innerHTML.replace('&amp;', 'and');
   }
 
-  addListener() {
-    this.domRef.addEventListener('click', (event) => {
-      Dispatch.dispatch('GROUP_SWITCH', {
-        groupTitle: this.title,
-      });
+  handleGroupSwitch(info) {
+    if (this.title == info.groupTitle) {
       this.classInfo.fnSetActive(this.id);
-    });
+    }
   }
 
 }

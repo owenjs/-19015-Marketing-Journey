@@ -3,18 +3,18 @@ import Frag from '../../tools/Frag.js';
 import Enhancement from '../../enhancement.js';
 import Dispatch from '../../tools/Dispatch.js';
 
-const groupMarkup = "<section class='question-group'><div class='question-group__heading'><h1>$HEADING$</h1></div><div class='question-group__questions'><div class='question-group__questions__container'><div class='arrow-left'></div>$frag_QUESTIONS$<div class='arrow-right'></div></div></div></section>";
+const groupMarkup = "<section class='question-group'><div class='question-group__heading'><h1>$HEADING$</h1><h5>Score your sense of $HEADING$.</h5><h5>On a scale of 1 (disagree) 10 (strongly agree) where would you rate your business?</h5><div class='question-group__heading__ticks'>$frag_TICKS$</div></div><div class='question-group__questions'><div class='question-group__questions__container'><div class='arrow-left'></div>$frag_QUESTIONS$<div class='arrow-right'></div></div></div><div class='question-group__quotes'><div class='question-group__quotes--left'></div><div class='question-group__quotes__quote'>$frag_QUOTE$</div><div class='question-group__quotes--right'></div></div></section>";
+const questionTickMarkup = "<div class='question-group__heading__ticks__tick'></div>";
 
 export default class Group extends Enhancement {
 
-  constructor(title, id, domQuestions, classInfo) {
+  constructor(title, id, domQuestions, domQuote, classInfo) {
     super(); // Create 'this'
     this.title = title;
     this.id = id;
     this.questions = this.buildQuestions(domQuestions);
+    this.domQuote = [domQuote];
     this.classInfo = classInfo;
-
-    Dispatch.addToDispatchGroup('GROUP_SWITCH', (info) => { this.handleGroupSwitch(info) });
   }
 
   render() {
@@ -32,8 +32,25 @@ export default class Group extends Enhancement {
     // Replace the Question Frag macro with the Questions
     groupFrag.replace("$frag_QUESTIONS$", questionFrags);
 
+    // Replace the Ticks Frag Macro with the Ticks
+    groupFrag.replace("$frag_TICKS$", this.createTicks());
+
+    // Replace the Quote Frag macro with the Quote we have been given
+    groupFrag.replace("$frag_QUOTE$", this.domQuote);
+
     // Return the Render Group Fragment
     return groupFrag.render;
+  }
+
+  createTicks() {
+    let questionTickFrags = [];
+    this.questions.forEach((question) => {
+      // Create the Tick
+      let questionTickFrag = new Frag(questionTickMarkup);
+      // Push the Rendered Frag into the Array
+      questionTickFrags.push(questionTickFrag.render);
+    });
+    return questionTickFrags;
   }
 
   buildQuestions(domQuestions) {
@@ -53,10 +70,13 @@ export default class Group extends Enhancement {
     if(id || id == 0) {
       jumpingTo = true;
     }
-    
+
     if (this.questions[this.activeQuestion].classInfo.last && !jumpingTo) {
       // Move onto Next group after the last question has been answered
-      this.classInfo.fnSetActive(1);
+      setTimeout(() => {
+        this.classInfo.fnSetActive(1);
+      }, 250);
+      // Let Dispatcher know
       return;
     }
 
@@ -66,39 +86,39 @@ export default class Group extends Enhancement {
     }
 
     // Make Current Inactive
-    this.questions[this.activeQuestion].removeActiveState(direction);
+    setTimeout((id) => {
+      this.questions[id].removeActiveState(direction);
+    }, 250, this.activeQuestion);
     this.activeQuestion += direction;
     // Make Next or Previous Active
-    this.questions[this.activeQuestion].setActiveState(direction);
-  }
-
-  handleGroupSwitch(dispatchInfo) {
-    if (this.title == dispatchInfo.groupTitle) {
-      // This is the Group to Switch!
-      this.classInfo.fnSetActive(1, this.id);
-    }
+    setTimeout(() => {
+      this.questions[this.activeQuestion].setActiveState(direction);
+    }, 250);
   }
 
   setRefs(domQuestionGroup) {
     this.domRef = domQuestionGroup;
 
     // Find the Next and Back arrow
-    let backArrow = domQuestionGroup.querySelector(".arrow-left");
-    let nextArrow = domQuestionGroup.querySelector(".arrow-right");
+    this.backArrowRef = domQuestionGroup.querySelector(".arrow-left");
+    this.nextArrowRef = domQuestionGroup.querySelector(".arrow-right");
 
-    backArrow.onclick = () => {
+    // ToDo: Build Other Arrow Logic, can't more onto next question until answered etc
+    this.backArrowRef.onclick = () => {
       // -1 for Back
       this.setActive(-1);
     };
 
-    nextArrow.onclick = () => {
+    this.nextArrowRef.onclick = () => {
       this.setActive(1);
     };
+
+    let questionTicks = domQuestionGroup.querySelectorAll(".question-group__heading__ticks__tick");
 
     // Find the Questions in this Group
     let domQuestions = domQuestionGroup.findChildrenByClassName("c2form_row");
     domQuestions.forEach((domQuestion, id) => {
-      this.questions[id].setRefs(domQuestion);
+      this.questions[id].setRefs(domQuestion, questionTicks[id]);
       if (id == 0) {
         this.questions[id].setActiveState();
         this.activeQuestion = 0;

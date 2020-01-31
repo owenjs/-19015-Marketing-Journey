@@ -1,5 +1,6 @@
 import Enhancement from '../enhancement.js'
 import Group from './surveys/group.js';
+import Dispatch from '../tools/Dispatch.js';
 
 export default class Survey extends Enhancement {
 
@@ -17,8 +18,8 @@ export default class Survey extends Enhancement {
   }
 
   findGroups(domSurvey) {
-    let domGroups = domSurvey.findChildrenByClassName("c2form_fieldset"),
-      groups = [];
+    let domGroups = domSurvey.findChildrenByClassName("c2form_fieldset"), groups = [];
+    let domQuotes = document.querySelector(".marketing-survey__group-quotes");
 
     let id = 0;
     // Build Each Group
@@ -36,7 +37,7 @@ export default class Survey extends Enhancement {
       }
 
       // Push this Group into the Survey Groups
-      groups.push(new Group(title, id, group.findChildrenByClassName("c2form_row"), {
+      groups.push(new Group(title, id, group.findChildrenByClassName("c2form_row"), domQuotes.children[id], {
         fnSetActive: (direction, id) => { this.setActive(direction, id) },
       }));
       id++;
@@ -103,6 +104,9 @@ export default class Survey extends Enhancement {
     
     // Make Next or Previous Active
     this.survey.groups[this.survey.activeGroup].setActiveState(direction);
+    Dispatch.dispatch('GROUP_CHANGE', {
+      groupTitle: this.survey.groups[this.survey.activeGroup].title,
+    });
   }
 
   submitSurvey() {
