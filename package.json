@@ -22,7 +22,9 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
     "hammerjs": "^2.0.8",
-    "node-sass": "^4.13.0"
+    "lodash": "^4.17.15",
+    "lodash.template": "^4.5.0",
+    "node-sass": "^4.13.1"
   },
   "dependencies": {
     "babel-plugin-transform-es2015-modules-systemjs": "^6.24.1",
