@@ -1,12 +1,8 @@
-import Frag from '../tools/Frag.js';
-import Dispatch from '../tools/Dispatch.js';
 import Switcher from './groupSwitchers/switcher.js';
-import viewPort from '../utils/viewPort.js';
 
 export default class GroupSwitcher {
 
   constructor(domGroupSwitcher) {
-    let Hammer = require('hammerjs');
     this.refs = {
       container: domGroupSwitcher,
       drag: domGroupSwitcher.querySelector(".marketing-survey__group-shifter__drag"),

@@ -2,7 +2,7 @@ import Option from './option.js';
 import Frag from '../../tools/Frag.js';
 import Enhancement from '../../enhancement.js';
 
-const questionMarkup = "<div class='c2form_row__range'>$frag_OPTIONS$</div>";
+const questionMarkup = "<div class='c2form_row__range'>$frag_OPTIONS$</div><div class='c2form_row__range__slider'></div>";
 
 export default class Question extends Enhancement {
 
@@ -14,7 +14,7 @@ export default class Question extends Enhancement {
     this.container = domQuestion;
     this.options = this.findOptions(domQuestion);
     this.activeOption = 0;
-    // ToDo: Find the Min and Max for the Question
+    this.noUiSlider = require('nouislider');
   }
 
   /**
@@ -23,7 +23,7 @@ export default class Question extends Enhancement {
    */
   render() {
     let questionFragment = new Frag(questionMarkup), optionFrags = [];
-    
+
     // Render each Option
     this.options.forEach((option) => {
       optionFrags.push(option.render());
@@ -46,18 +46,28 @@ export default class Question extends Enhancement {
   findOptions(domQuestion) {
     // Get the radio Buttons out of the DOM Element
     let radioBtns = domQuestion.findChildrenByClassName("c2form_radio")[0].children;
-    let options = [];
+    let options = [], value = 0;
     // For each radio button get the Input and Label out
     radioBtns.forEach((radioBtn, id) => {
-      // ToDo: Dynamic Ranges, not always starting from 0
       let option = new Option(id, {
-        fnUpdateActive: (option) => {this.updateActive(option)},
+        fnUpdateActive: (option) => { this.updateActive(option) },
       });
       // This contains the Input and Label, wrapped in Spans
       let container = radioBtn.children[0].children;
       // Get the Input and Label Out, always in the same place
       option.input = container[0].firstChild;
       option.label = container[1].firstChild;
+
+      if (id == 0) {
+        // On first Option, Work out the offset For the Values
+        value += Number(option.label.innerHTML.match(/^(\d+).*$/)[1]); // Matches the First Number on the Label
+        this.min = value;
+      } else {
+        value++;
+        this.max = value;
+      }
+
+      option.value = value;
       options.push(option);
     });
     return options;
@@ -71,11 +81,28 @@ export default class Question extends Enhancement {
     this.domRef = domQuestion;
     this.tickRef = domQuestionTick;
 
+    // Build the Mobile Range
+    this.buildMobileRange();
+
     // Find the Options in this Question
     let domOptions = domQuestion.findChildrenByClassName("c2form_row__range")[0].children;
     // Pass the Reference for each Option to the Option classes
     domOptions.forEach((domOption, id) => {
       this.options[id].setRefs(domOption);
+    });
+  }
+
+  buildMobileRange() {
+    let rangeSlider = this.domRef.querySelector(".c2form_row__range__slider");
+
+    this.noUiSlider.create(rangeSlider, {
+      start: [5],
+      step: 1,
+      tooltips: true,
+      range: {
+        'min': [this.min],
+        'max': [this.max]
+      }
     });
   }
 

@@ -1,0 +1,20 @@
+@import "scss/variables";
+@import "scss/mixins";
+@import "scss/keyFrames";
+@import "scss/loading";
+@import "scss/main";
+@import "scss/question-groups";
+
+@import "../node_modules/nouislider/distribute/nouislider";
+.noUi-tooltip {
+  display: none;
+}
+.noUi-active .noUi-tooltip {
+  display: block;
+}
+.noUi-origin {
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+}

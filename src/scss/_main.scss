@@ -1,0 +1,108 @@
+.ig-page--marketing-survey {
+  .main {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    &__background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("http://f.intergagecouk.1-20-7.b01.co.uk/p/1/survey-background.svg");
+      background-size: cover;
+      z-index: -1;
+      //animation: animatedBackground 5s linear infinite;
+    }
+  }
+
+  .marketing-survey {
+    &__form {
+      position: relative;
+      flex: 0 1 100%;
+      width: 100%;
+    }
+    &__group-shifter {
+      position: relative;
+      flex: 1 1 auto;
+      width: 100%;
+      height: calc(180px + 4rem);
+      @include at($bs-md) {
+        height: calc(200px + 4rem);
+      }
+      @include at($bs-lg) {
+        height: calc(220px + 4rem);
+      }
+      // Each Planet
+      &__drag {
+        display: flex;
+        position: absolute;
+        @include at($bs-md) {
+          left: 2rem;
+        }
+        @include at($bs-lg) {
+          left: 5rem;
+        }
+        transition: left 0.6s;
+      }
+      &__planet {
+        height: 180px;
+        width: 180px;
+        flex: 0 0 180px;
+        @include at($bs-md) {
+          height: 200px;
+          width: 200px;
+          flex: 0 0 200px;
+          margin-right: 1rem;
+        }
+        @include at($bs-lg) {
+          height: 220px;
+          width: 220px;
+          flex: 0 0 220px;
+          margin-right: 5rem;
+        }
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        // Active Planet
+        &.active {
+          .marketing-survey__group-shifter__planet__img {
+            height: 80%;
+            width: 80%;
+          }
+        }
+        &__img {
+          height: 45%;
+          width: 45%;
+          transition: height 0.5s, width 0.5s;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+        &__title {
+          color: #fff;
+          font-weight: 700;
+          padding: 1rem 0;
+        }
+      }
+      &::after {
+        content: "";
+        width: 100%;
+        height: 2px;
+        position: absolute;
+        top: 41%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: -1;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.4) 50%, transparent 0%);
+        background-position: bottom;
+        background-size: 30px 2px;
+        background-repeat: repeat-x;
+      }
+    }
+    &__group-quotes {
+      display: none;
+    }
+  }
+}

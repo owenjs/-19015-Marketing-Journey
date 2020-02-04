@@ -24,7 +24,9 @@
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.15",
     "lodash.template": "^4.5.0",
-    "node-sass": "^4.13.1"
+    "node-sass": "^4.13.1",
+    "nouislider": "^14.1.1",
+    "sass": "^1.25.0"
   },
   "dependencies": {
     "babel-plugin-transform-es2015-modules-systemjs": "^6.24.1",

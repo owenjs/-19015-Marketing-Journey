@@ -1,0 +1,17 @@
+@mixin at($point) {
+  @media screen and (min-width: $point) {
+    @content;
+  }
+}
+
+@mixin before($point) {
+  @media screen and (max-width: $point) {
+    @content;
+  }
+}
+
+@mixin between($pointx, $pointy) {
+  @media screen and (min-width: $pointx) and (max-width: $pointy) {
+    @content;
+  }
+}

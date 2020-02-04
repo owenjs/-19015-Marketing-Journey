@@ -1,0 +1,232 @@
+.ig-page--marketing-survey {
+  .main {
+    .question-group {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: -100%;
+      &.active {
+        left: 0%;
+        animation: fromRight 0.7s;
+      }
+      &.active--rev {
+        left: 0%;
+        animation: fromLeft 0.7s;
+      }
+      &.inactive {
+        animation: off 0.7s;
+      }
+      &.inactive--rev {
+        animation: off-rev 0.7s;
+      }
+      display: flex;
+      flex-direction: column;
+      @include at($bs-md) {
+        padding: 0 4rem;
+      }
+      @include at($bs-lg) {
+        padding: 0 8rem;
+      }
+      &__heading {
+        flex: 0 0 35%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        @include before($bs-md) {
+          padding: 0 2rem;
+        }
+        &__ticks {
+          display: flex;
+          padding: 1.2rem 0;
+          &__tick {
+            background: transparent;
+            border: 2px dashed #888;
+            border-radius: 20px;
+            &.checked {
+              background-image: url($question-tick);
+              border: 0;
+              border-radius: 0px;
+              background-repeat: no-repeat;
+              animation: tickAppear 0.35s;
+            }
+            width: 35px;
+            height: 35px;
+            margin-right: 0.5rem;
+          }
+        }
+        &__desc {
+          @include before($bs-lg) {
+            display: none;
+          }
+        }
+        @include before($bs-sm) {
+          h1 {
+            font-size: 2rem;
+          }
+        }
+        h1, h5 {
+          color: #fff;
+        }
+        h5 {
+          margin: 0;
+        }
+      }
+      &__quotes {
+        position: relative;
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: center;
+        @include before($desktop-min) {
+          display: none;
+        }
+        &--left, &--right {
+          width: 20px;
+          height: 20px;
+          margin: 0 0.5rem;
+          background-repeat: no-repeat;
+        }
+        &--left {
+          background-image: url($quotes-left);
+        }
+        &__quote {
+          max-width: 550px;
+          text-align: center;
+          > p {
+            color: #fff;
+          }
+        }
+        &--right {
+          background-image: url($quotes-right);
+        }
+      }
+      &__questions {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        @include at($bs-md) {
+          padding: 3rem 0;
+        }
+        &__container {
+          position: relative;
+          overflow: hidden;
+          width: 100%;
+          @include at($desktop-min) {
+            width: 60%;
+          }
+          min-height: 250px;
+          border-radius: 30px;
+          @include at($bs-sm) {
+            background: #d8f1f6;
+          }
+          @include before($bs-sm) {
+            color: #fff;
+          }
+          .arrow-left, .arrow-right {
+            position: absolute;
+            background-size: contain;
+            cursor: pointer;
+            background-repeat: no-repeat;
+            width: 21px;
+            height: 34px;
+            z-index: 1;
+            top: 50%;
+            transform: translateY(-50%);
+            @include before($bs-sm) {
+              display: none;
+            }
+          }
+          .arrow-left {
+            background-image: url($left-arrow);
+            left: 20px;
+          }
+          .arrow-right {
+            background-image: url($right-arrow);
+            right: 20px;
+          }
+        }
+        .c2form_row {
+          position: absolute;
+          left: -100%;
+          height: 100%;
+          width: 100%;
+          padding: 0 1rem;
+          @include at($bs-md) {
+            padding: 0 46px;
+          }
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          &.active {
+            left: 0%;
+            animation: fromRight 0.6s;
+          }
+          &.active--rev {
+            left: 0%;
+            animation: fromLeft 0.6s;
+          }
+          &.inactive {
+            animation: off 0.6s;
+          }
+          &.inactive--rev {
+            animation: off-rev 0.6s;
+          }
+          .c2form_input {
+            .FormCodesScroll, .c2form_radio {
+              display: none;
+            }
+          }
+          .c2form_fldname {
+            font-size: 1.2rem;
+            @include at($bs-md) {
+              font-size: 1.5rem;
+            }
+            font-weight: 700;
+            margin-bottom: 2rem;
+          }
+          // Options For each Question
+          &__range {
+            @include before($bs-sm) {
+              display: none;
+            } 
+            display: flex;
+            justify-content: space-around;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            &__current {
+              color: #fff;
+              &::after {
+                content: "";
+                height: 40px;
+                width: 40px;
+                position: absolute;
+                background: #e81d76;
+                z-index: -1;
+                border-radius: 50%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
+            }
+            
+            > span {
+              position: relative;
+              cursor: pointer;
+              z-index: 0;
+            }
+            // Mobile Slider
+            &__slider {
+              @include at($bs-sm) {
+                display: none;
+              } 
+            }
+          }
+        }
+      }
+    }
+  }
+}

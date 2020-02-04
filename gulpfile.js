@@ -11,7 +11,7 @@ var babelify = require("babelify");
 var babel = require("gulp-babel");
 var sass = require("gulp-sass");
 // Set the Sass Compiler we will use
-sass.compiler = require("node-sass"); // Default
+sass.compiler = require("sass"); // Dart-sass
 var concat = require("gulp-concat");
 var plumber = require("gulp-plumber");
 // Import Browser Sync Plugin
@@ -55,9 +55,11 @@ var compileScript = () => {
  */
 var compileStyle = () => {
   return gulp
-    .src("./src/scss/**/*.scss")
-    .pipe(concat("global.scss"))
-    .pipe(sass())
+    .src("./src/Init.scss")
+    .pipe(sourcemaps.init())
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(concat("global.css"))
+    .pipe(sourcemaps.write("./"))
     .pipe(gulp.dest("./app/css"))
     .pipe(browserSync.stream());
 };
@@ -75,7 +77,7 @@ var watchScript = () => {
  *              re compiles and syncs with the browser
  */
 var watchStyle = () => {
-  gulp.watch("./src/scss/**/*.scss", compileStyle);
+  gulp.watch(["./src/scss/**/*.scss", "./src/Init.scss"], compileStyle);
 };
 
 /**

@@ -4,7 +4,7 @@
  * @param {string} className: The class name to match
  */
 HTMLElement.prototype.findChildrenByClassName = function (className) {
-  if (!this.children || !this.children.length) {return}
+  if (!this.children || !this.children.length) { return }
 
   let elementsFound = [];
 
@@ -40,7 +40,17 @@ HTMLElement.prototype.appendChildren = function (children) {
  * @param {fn} callBack: The function call back for each element
  */
 HTMLCollection.prototype.forEach = function (callBack) {
-  Array.prototype.slice.call(this).forEach((el, id) => {callBack(el, id)});
+  Array.prototype.slice.call(this).forEach((el, id) => { callBack(el, id) });
+}
+
+/**
+ * * IE Support
+ * NodeList prototype forEach -  A for each call for a Node List
+ */
+if (!('forEach' in NodeList.prototype)) {
+  NodeList.prototype.forEach = function (callBack) {
+    Array.prototype.slice.call(this).forEach((el, id) => { callBack(el, id) });
+  };
 }
 
 /**
@@ -52,6 +62,18 @@ Array.prototype.pushArray = function (arr) {
   if (!arr || !arr.length) { return };
   this.push.apply(this, arr);
 };
+
+/**
+ * * IE Support
+ * Element prototype remove - Removes the Object from the DOM tree it belongs to
+ */
+if (!('remove' in Element.prototype)) {
+  Element.prototype.remove = function () {
+    if (this.parentNode) {
+      this.parentNode.removeChild(this);
+    }
+  };
+}
 
 let protoTypes = "";
 export default protoTypes;

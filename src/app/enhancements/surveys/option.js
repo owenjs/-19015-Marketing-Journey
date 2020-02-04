@@ -20,7 +20,7 @@ export default class Option {
     // Render the Frag
     let optionRender = optionFrag.render;
     // Add the click handler
-    optionRender.firstElementChild.addEventListener('click', () => {
+    optionRender.firstChild.addEventListener('click', () => {
       this.handleClick();
     });
     return optionRender;

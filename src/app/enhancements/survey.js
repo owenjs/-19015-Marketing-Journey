@@ -36,8 +36,12 @@ export default class Survey extends Enhancement {
         return; // Skip for now
       }
 
+      // Find the Description for this Group
+      let domDesc = group.querySelector(".c2form_fieldset_desc");
+      let desc = (domDesc && domDesc.children.length) ? domDesc.children : null;
+
       // Push this Group into the Survey Groups
-      groups.push(new Group(title, id, group.findChildrenByClassName("c2form_row"), domQuotes.children[id], {
+      groups.push(new Group(title, desc, id, group.findChildrenByClassName("c2form_row"), domQuotes.children[id], {
         fnSetActive: (direction, id) => { this.setActive(direction, id) },
       }));
       id++;

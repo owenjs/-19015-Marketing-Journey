@@ -3,14 +3,15 @@ import Frag from '../../tools/Frag.js';
 import Enhancement from '../../enhancement.js';
 import Dispatch from '../../tools/Dispatch.js';
 
-const groupMarkup = "<section class='question-group'><div class='question-group__heading'><h1>$HEADING$</h1><h5>Score your sense of $HEADING$.</h5><h5>On a scale of 1 (disagree) 10 (strongly agree) where would you rate your business?</h5><div class='question-group__heading__ticks'>$frag_TICKS$</div></div><div class='question-group__questions'><div class='question-group__questions__container'><div class='arrow-left'></div>$frag_QUESTIONS$<div class='arrow-right'></div></div></div><div class='question-group__quotes'><div class='question-group__quotes--left'></div><div class='question-group__quotes__quote'>$frag_QUOTE$</div><div class='question-group__quotes--right'></div></div></section>";
+const groupMarkup = "<section class='question-group'><div class='question-group__heading'><h1>$HEADING$</h1><div class='question-group__heading__desc'>$frag_DESC$</div><div class='question-group__heading__ticks'>$frag_TICKS$</div></div><div class='question-group__questions'><div class='question-group__questions__container'><div class='arrow-left'></div>$frag_QUESTIONS$<div class='arrow-right'></div></div></div><div class='question-group__quotes'><div class='question-group__quotes--left'></div><div class='question-group__quotes__quote'>$frag_QUOTE$</div><div class='question-group__quotes--right'></div></div></section>";
 const questionTickMarkup = "<div class='question-group__heading__ticks__tick'></div>";
 
 export default class Group extends Enhancement {
 
-  constructor(title, id, domQuestions, domQuote, classInfo) {
+  constructor(title, desc, id, domQuestions, domQuote, classInfo) {
     super(); // Create 'this'
     this.title = title;
+    this.desc = desc;
     this.id = id;
     this.questions = this.buildQuestions(domQuestions);
     this.domQuote = [domQuote];
@@ -24,6 +25,10 @@ export default class Group extends Enhancement {
     let groupFrag = new Frag(groupMarkup);
     // Replace the Heading Macro with the Group Title
     groupFrag.replace("$HEADING$", this.title);
+
+    // Replace the Description Frag Macro
+    groupFrag.replace("$frag_DESC$", this.desc);
+
     // Render each Question in the group
     let questionFrags = [];
     this.questions.forEach((question) => {
