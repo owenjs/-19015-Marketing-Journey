@@ -27,17 +27,23 @@
       position: relative;
       flex: 1 1 auto;
       width: 100%;
-      height: calc(180px + 4rem);
+      height: calc(20px + 4rem);
+      @include at($bs-sm) {
+        height: calc(180px + 4rem);
+      }
       @include at($bs-md) {
         height: calc(200px + 4rem);
       }
       @include at($bs-lg) {
         height: calc(220px + 4rem);
       }
-      // Each Planet
       &__drag {
         display: flex;
         position: absolute;
+        @include before($bs-sm) {
+          transform: translateX(-110px);
+          left: 110px;
+        }
         @include at($bs-md) {
           left: 2rem;
         }
@@ -46,10 +52,19 @@
         }
         transition: left 0.6s;
       }
+      // Each Planet
       &__planet {
-        height: 180px;
-        width: 180px;
-        flex: 0 0 180px;
+        height: calc(20px + 3rem);
+        width: 100vw;
+        flex: 0 0 100vw;
+        @include before($bs-sm) {
+          position: relative;
+        }
+        @include at($bs-sm) {
+          height: 180px;
+          width: 180px;
+          flex: 0 0 180px;
+        }
         @include at($bs-md) {
           height: 200px;
           width: 200px;
@@ -74,6 +89,10 @@
           }
         }
         &__img {
+          display: none;
+          @include at($bs-sm) {
+            display: block;
+          }
           height: 45%;
           width: 45%;
           transition: height 0.5s, width 0.5s;
@@ -84,10 +103,54 @@
           color: #fff;
           font-weight: 700;
           padding: 1rem 0;
+          @include before($bs-sm) {
+            font-size: 1.2rem;
+          }
         }
       }
+      &__back, &__next {
+        position: absolute;
+        background-size: contain;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        width: 21px;
+        height: 34px;
+        z-index: 1;
+        top: 50%;
+        transform: translateY(-50%);
+        display: none;
+        &.show {
+          display: block;
+        }
+        @include at($bs-sm) {
+          display: none !important;
+        }
+      }
+      &__back {
+        background-image: url($left-arrow);
+        left: 15px;
+      }
+      &__next {
+        background-image: url($right-arrow);
+        right: 15px;
+      }
+      &__progress {
+        @include at($bs-sm) {
+          display: none;
+        }
+        height: 100%;
+        width: 0px;
+        background: #e81d76;
+        z-index: 0;
+        position: absolute;
+        transition: width 0.2s;
+        border-top-left-radius: 50px;
+        border-bottom-left-radius: 50px;
+      }
       &::after {
-        content: "";
+        @include at($bs-sm) {
+          content: "";
+        }
         width: 100%;
         height: 2px;
         position: absolute;

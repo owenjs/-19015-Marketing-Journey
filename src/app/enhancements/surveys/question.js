@@ -96,13 +96,44 @@ export default class Question extends Enhancement {
     let rangeSlider = this.domRef.querySelector(".c2form_row__range__slider");
 
     this.noUiSlider.create(rangeSlider, {
-      start: [5],
+      start: [this.max / 2],
       step: 1,
       tooltips: true,
       range: {
         'min': [this.min],
         'max': [this.max]
-      }
+      },
+      pips: {
+        mode: 'steps',
+        density: 10,
+        format: {
+          // 'to' the formatted value. Receives a number.
+          to: value => {
+            return (value == this.min) ? value + ' Disagree' 
+                 : (value == this.max) ? 'Agree ' + value
+                 : value;
+          }
+        }
+      },
+    });
+
+    // Add Event Handlers
+    let moving = false;
+    rangeSlider.noUiSlider.on('change', (e) => {
+      let value = Number(e[0]).toFixed(0);
+
+      this.options.forEach((option) => {
+        if (option.value == value && !moving) {
+          option.check();
+          this.updateActive(option);
+        }
+      });
+
+      moving = true;
+      setTimeout(() => {
+        // Wait till the Animation has finished
+        moving = false;
+      }, 250);
     });
   }
 
@@ -111,7 +142,7 @@ export default class Question extends Enhancement {
    */
   updateActive(option) {
     // Uncheck the Previous Option
-    if (this.activeOption) {
+    if (this.activeOption && option.value != this.activeOption.value) {
       this.activeOption.unCheck();
     }
     // Update the Active Option

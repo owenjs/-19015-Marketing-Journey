@@ -6,6 +6,9 @@
       height: 100%;
       top: 0;
       left: -100%;
+      @include before($bs-md) {
+        padding: 2rem 0;
+      }
       &.active {
         left: 0%;
         animation: fromRight 0.7s;
@@ -29,16 +32,20 @@
         padding: 0 8rem;
       }
       &__heading {
-        flex: 0 0 35%;
+        @include at($bs-sm) {
+          flex: 0 0 35%;
+        }
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         @include before($bs-md) {
-          padding: 0 2rem;
+          padding: 0 15px;
         }
         &__ticks {
           display: flex;
-          padding: 1.2rem 0;
+          @include at($bs-sm) {
+            padding: 1.2rem 0;
+          }
           &__tick {
             background: transparent;
             border: 2px dashed #888;
@@ -49,6 +56,13 @@
               border-radius: 0px;
               background-repeat: no-repeat;
               animation: tickAppear 0.35s;
+            }
+            &.active {
+              border-color: #ffd101;
+            }
+            &.checked.active {
+              border: 2px dashed #ffd101;
+            border-radius: 20px;
             }
             width: 35px;
             height: 35px;
@@ -62,7 +76,7 @@
         }
         @include before($bs-sm) {
           h1 {
-            font-size: 2rem;
+            display: none;
           }
         }
         h1, h5 {
@@ -105,7 +119,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        
+        @include before($bs-sm) {
+          flex: 1 1 auto;
+          justify-content: center;
+        }
         @include at($bs-md) {
           padding: 3rem 0;
         }
@@ -134,8 +151,12 @@
             z-index: 1;
             top: 50%;
             transform: translateY(-50%);
+            display: none;
+            &.show {
+              display: block;
+            }
             @include before($bs-sm) {
-              display: none;
+              display: none !important;
             }
           }
           .arrow-left {
@@ -156,10 +177,12 @@
           @include at($bs-md) {
             padding: 0 46px;
           }
-          text-align: center;
           display: flex;
           flex-direction: column;
-          justify-content: center;
+          @include at($bs-sm) {
+            text-align: center;
+            justify-content: center;
+          }
           &.active {
             left: 0%;
             animation: fromRight 0.6s;
@@ -180,9 +203,11 @@
             }
           }
           .c2form_fldname {
-            font-size: 1.2rem;
+            @include at($bs-sm) {
+              font-size: 1.2rem;
+            }
             @include at($bs-md) {
-              font-size: 1.5rem;
+              font-size: 1.4rem;
             }
             font-weight: 700;
             margin-bottom: 2rem;

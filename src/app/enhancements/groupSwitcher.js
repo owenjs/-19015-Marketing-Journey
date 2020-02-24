@@ -7,6 +7,7 @@ export default class GroupSwitcher {
       container: domGroupSwitcher,
       drag: domGroupSwitcher.querySelector(".marketing-survey__group-shifter__drag"),
       switchers: domGroupSwitcher.querySelectorAll(".marketing-survey__group-shifter__planet"),
+      progressBar: domGroupSwitcher.querySelector(".marketing-survey__group-shifter__progress"),
     };
     this.activeGroupSwitcher = 0;
     this.groupSwitchers = [];
@@ -37,6 +38,10 @@ export default class GroupSwitcher {
     // Make Next Active
     this.groupSwitchers[this.activeGroupSwitcher].setActiveState();
     this.handleGroupSwitch(id);
+
+    // Update the Progress Bar
+    let progressPercent = (100 / this.groupSwitchers.length) * id;
+    this.refs.progressBar.style.width = progressPercent + "vw";
   }
 
   handleGroupSwitch(id) {

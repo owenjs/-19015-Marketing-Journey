@@ -76,7 +76,7 @@ export default class Group extends Enhancement {
       jumpingTo = true;
     }
 
-    if (this.questions[this.activeQuestion].classInfo.last && !jumpingTo) {
+    if (this.questions[this.activeQuestion].classInfo.last && !jumpingTo && direction != -1) {
       // Move onto Next group after the last question has been answered
       setTimeout(() => {
         this.classInfo.fnSetActive(1);
@@ -93,30 +93,69 @@ export default class Group extends Enhancement {
     // Make Current Inactive
     setTimeout((id) => {
       this.questions[id].removeActiveState(direction);
+      this.questions[id].tickRef.classList.remove("active");
     }, 250, this.activeQuestion);
+
     this.activeQuestion += direction;
+
     // Make Next or Previous Active
     setTimeout(() => {
       this.questions[this.activeQuestion].setActiveState(direction);
+      this.questions[this.activeQuestion].tickRef.classList.add("active");
+
+      if (this.questions[this.activeQuestion - 1] 
+        && this.questions[this.activeQuestion - 1].activeOption) {
+        this.backArrowRefs.forEach((backArrowRef) => {
+          backArrowRef.classList.add("show");
+        });
+      } else {
+        this.backArrowRefs.forEach((backArrowRef) => {
+          backArrowRef.classList.remove("show");
+        });
+      }
+
+      if (this.questions[this.activeQuestion].activeOption) {
+        this.nextArrowRefs.forEach((nextArrowRef) => {
+          nextArrowRef.classList.add("show");
+        });
+      } else {
+        this.nextArrowRefs.forEach((nextArrowRef) => {
+          nextArrowRef.classList.remove("show");
+        });
+      }
     }, 250);
+
   }
 
   setRefs(domQuestionGroup) {
     this.domRef = domQuestionGroup;
 
-    // Find the Next and Back arrow
+    
     this.backArrowRef = domQuestionGroup.querySelector(".arrow-left");
     this.nextArrowRef = domQuestionGroup.querySelector(".arrow-right");
 
-    // ToDo: Build Other Arrow Logic, can't more onto next question until answered etc
-    this.backArrowRef.onclick = () => {
-      // -1 for Back
-      this.setActive(-1);
-    };
+    // Find the Next and Back arrow, there are two include the Mobile Ones
+    this.backArrowRefs = [
+      domQuestionGroup.querySelector(".arrow-left"),
+      document.querySelectorAll(".marketing-survey__group-shifter__back")[this.id],
+    ];
+    this.nextArrowRefs = [
+      domQuestionGroup.querySelector(".arrow-right"),
+      document.querySelectorAll(".marketing-survey__group-shifter__next")[this.id],
+    ];
 
-    this.nextArrowRef.onclick = () => {
-      this.setActive(1);
-    };
+    this.backArrowRefs.forEach((backArrowRef) => {
+      backArrowRef.onclick = () => {
+        // -1 for Back
+        this.setActive(-1);
+      };
+    });
+
+    this.nextArrowRefs.forEach((nextArrowRef) => {
+      nextArrowRef.onclick = () => {
+        this.setActive(1);
+      };
+    });
 
     let questionTicks = domQuestionGroup.querySelectorAll(".question-group__heading__ticks__tick");
 
@@ -124,8 +163,10 @@ export default class Group extends Enhancement {
     let domQuestions = domQuestionGroup.findChildrenByClassName("c2form_row");
     domQuestions.forEach((domQuestion, id) => {
       this.questions[id].setRefs(domQuestion, questionTicks[id]);
+      // If First Question in this Group
       if (id == 0) {
         this.questions[id].setActiveState();
+        this.questions[id].tickRef.classList.add("active");
         this.activeQuestion = 0;
       }
     });

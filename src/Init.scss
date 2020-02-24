@@ -18,3 +18,15 @@
   transition: transform 0.2s;
   transition: transform 0.2s, -webkit-transform 0.2s;
 }
+.noUi-value:not(.noUi-value-sub) {
+  color: #ffd101;
+}
+
+.noUi-pips {
+  .noUi-value:nth-child(2) {
+    transform: translate(-8%, 80%);
+  }
+  .noUi-value:last-child {
+    transform: translate(-92%, 80%);
+  }
+}
