@@ -1,6 +1,9 @@
 import Enhancement from '../enhancement.js'
 import Group from './surveys/group.js';
 import Dispatch from '../tools/Dispatch.js';
+import Frag from '../tools/Frag.js';
+
+const lastCardMarkUp = '<div class="c2form_row surveySlider c2form_row_endCard"><label class="c2form_fldname">Almost there! Submit the Survey to see your Results</label><div class="c2form_row_endCard__btn">$frag_SUBMITBTN$</div></div>';
 
 export default class Survey extends Enhancement {
 
@@ -8,8 +11,13 @@ export default class Survey extends Enhancement {
     super(); // Create 'this'
     if (!domSurvey) {
       console.log("No Survey");
+      this.noSurvey = true;
       return;
     }
+
+    this.refs = {
+      submitBtn: domSurvey.querySelector(".c2form_buttons .c2btnconfirmadd"),
+    };
 
     this.survey = {
       groups: this.findGroups(domSurvey),
@@ -43,11 +51,11 @@ export default class Survey extends Enhancement {
       // Push this Group into the Survey Groups
       groups.push(new Group(title, desc, id, group.findChildrenByClassName("c2form_row"), domQuotes.children[id], {
         fnSetActive: (direction, id) => { this.setActive(direction, id) },
+        last: (id == domGroups.length - 1) ? true : false,
       }));
       id++;
     });
-    // Remove the original Form Container from the DOM, we've got everything we need from it
-    domSurvey.findChildrenByClassName("c2form_container").forEach((el) => { el.remove() });
+
     return groups;
   }
 
@@ -74,6 +82,17 @@ export default class Survey extends Enhancement {
       if (id == 0) {
         this.survey.groups[id].setActiveState();
       }
+      if (id == domQuestionGroups.length - 1) {
+        // Last Group, add the Last Card in (Submit Survey Card)
+        let questions = domQuestionGroup.querySelector(".question-group__questions__container");
+        let lastCardFrag = new Frag(lastCardMarkUp);
+        // Replace the Submit Button
+        lastCardFrag.replace("$frag_SUBMITBTN$", [this.refs.submitBtn]);
+        // Add the Card to the Questions
+        questions.appendChild(lastCardFrag.render);
+
+        this.refs.submitCard = questions.querySelector(".c2form_row_endCard");
+      }
     });
   }
 
@@ -84,9 +103,9 @@ export default class Survey extends Enhancement {
       jumpingTo = true;
     }
 
-    if (this.survey.groups[this.survey.activeGroup].classInfo.last && !jumpingTo) {
+    if (this.survey.groups[this.survey.activeGroup].classInfo.last && !jumpingTo && direction != -1) {
       // Submit the Survey on last group finish
-      this.submitSurvey();
+      this.showSubmitCard();
       return;
     }
 
@@ -113,9 +132,16 @@ export default class Survey extends Enhancement {
     });
   }
 
-  submitSurvey() {
-    // ToDo: Find form in parent and submit it
-    console.log("Submitting Survey");
+  showSubmitCard() {
+    let activeQuestionId = this.survey.groups[this.survey.activeGroup].activeQuestion;
+    // Hide the Current Active Card
+    this.survey.groups[this.survey.activeGroup].questions[activeQuestionId].removeActiveState(1);
+    // Hide the Back Arrow
+    this.survey.groups[this.survey.activeGroup].backArrowRefs.forEach((backArrowRef) => {
+      backArrowRef.classList.remove("show");
+    });
+    // Show the Submit Card
+    this.refs.submitCard.classList.add("active");
   }
 
 }

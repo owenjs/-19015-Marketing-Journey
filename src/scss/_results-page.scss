@@ -1,0 +1,211 @@
+// IN PRINT MODE
+@media print {
+  .ig-page--marketing-survey {
+    overflow:visible;
+    .main {
+      display: block;
+      .c2surveyResults__title {
+        display: none;
+      }
+      .c2graph, #Breakdown {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .c2graph {
+        width: 65%;
+        &__radar__graph {
+          max-width: 70%;
+        }
+      }
+      .c2surveyResults__ctas {
+        display: none;
+      }
+      #Breakdown {
+        width: 33%;
+        .c2graphTable {
+          &__data {
+            border: 0;
+            &__table {
+              th {
+                height: 2.2rem;
+              }
+              td {
+                height: 2rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @page {size: landscape}
+}
+
+// Normal Screens
+.ig-page--marketing-survey {
+  .main {
+    > p {
+      display: none;
+    }
+    // The Title
+    .c2surveyResults__title {
+      @media not print {
+        flex: 0 0 10vh;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        h1 {
+          position: relative;
+          color: #fff;
+          background: #002539;
+          @include before($bs-sm) {
+            padding: 15px;
+          }
+          &:after {
+            @include at($bs-sm) {
+              content: "";
+            }
+            position: absolute;
+            bottom: -8px;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: #e81d76;
+          }
+        }
+      }
+    }
+    // The Spider Graph
+    .c2graph {
+      @media not print {
+        fill: #fff;
+        flex: 0 0 60vh;
+        @include at($bs-sm) {
+          flex: 0 0 80vh;
+        }
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        &__radar {
+          @include between($bs-sm, $bs-md) {
+            padding: 3rem 0;
+          }
+          &__graph {
+            background: #002539;
+            max-width: 80%;
+          }
+        }
+        &__key {
+          color: #fff;
+        }
+      }
+    }
+    // The CTAs
+    .c2surveyResults__ctas {
+      max-width: 1500px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 0 0 10vh;
+      text-align: center;
+      // Breakdown Button, The Print Button 
+      &__bd, &__print {
+        font-family: 'proxima-nova',Arial,Helvetica,sans-serif;
+        display: inline-block;
+        background-color: transparent;
+        color: #e81d76 !important;
+        border-color: #e81d76 !important;
+        border: 0.125rem solid;
+        border-radius: 2rem;
+        line-height: 3rem;
+        padding: 0rem 1rem;
+        @include at($bs-sm) {
+          padding: 0rem 3rem;
+        }
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 1.2rem;
+        &:hover {
+          background-color: #e81d76;
+          color: #fff !important;
+          text-decoration: none;
+        }
+      }
+      &__bd {
+        margin-right: 1rem;
+        @include at($bs-sm) {
+          margin-right: 2rem;
+        }
+      }
+    }
+    // The Breakdown Table
+    .c2graphTable {
+      @media not print {
+        color: #fff;
+        max-width: 1500px;
+        margin: 0 auto;
+        &__data {
+          border: 0;
+          overflow: visible;
+        }
+        &__data__table {
+          thead {
+            display: none;
+          }
+          tbody {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            border: 0;
+          }
+          tr {
+            flex: 0 0 98%;
+            margin-bottom: 2rem;
+            flex-direction: column;
+            @include at($bs-md) {
+              flex: 0 0 48%;
+              margin-bottom: 4rem;
+              flex-direction: column-reverse;
+            }
+            @include at($bs-lg) {
+              flex: 0 0 30%;
+            }
+            @include at($desktop-min) {
+              flex: 0 0 21%;
+            }
+            display: flex;
+            border: 0;
+            
+            border-radius: 20px;
+            background: #002539;
+            box-shadow: 5px 5px 13px #000f17, -5px -5px 13px #003b5b;
+            padding: 0.8rem 0;
+            &:nth-child(n) {
+              border-left: 5px solid #1681C4;
+            }
+            &:nth-child(2n) {
+              border-left: 5px solid #e81d76;
+            }
+            &:nth-child(3n) {
+              border-left: 5px solid #f78d29;
+            }
+            &:nth-child(4n) {
+              border-left: 5px solid #ab439a;
+            }
+            td {
+              font-family: 'proxima-nova',Arial,Helvetica,sans-serif;
+              height: 2rem;
+              padding: 0 1.4rem;
+              font-size: 1rem;
+              border: 0;
+              &:last-of-type {
+                font-weight: 700;
+                font-size: 1.2rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

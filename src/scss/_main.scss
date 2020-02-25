@@ -1,11 +1,11 @@
 .ig-page--marketing-survey {
   .main {
-    height: 100vh;
     width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     &__background {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -14,6 +14,9 @@
       background-size: cover;
       z-index: -1;
       //animation: animatedBackground 5s linear infinite;
+    }
+    .c2form_container {
+      display: none;
     }
   }
 

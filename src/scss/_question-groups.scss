@@ -183,6 +183,11 @@
             text-align: center;
             justify-content: center;
           }
+          &_endCard {
+            &__btn button {
+              @include buttonCTA();
+            }
+          }
           &.active {
             left: 0%;
             animation: fromRight 0.6s;

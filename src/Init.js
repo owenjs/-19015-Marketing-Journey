@@ -12,6 +12,11 @@ function init(event) {
   let domSurvey = document.querySelector(".marketing-survey__form");
 
   let survey = new Survey(domSurvey);
+  if (survey.noSurvey) {
+    // No Survey On Page, We Must be On the Results Page
+    loadingPanel.setDone();
+    return;
+  }
   // Render the Survey into the exciting Form on the page
   survey.render(domSurvey.querySelector("form"));
 
