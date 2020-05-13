@@ -1,0 +1,40 @@
+
+.marketing-survey__results-form {
+  background: rgba($white, 0.95);
+  padding: 1.5rem 1rem;
+  @include at($bs-md) {
+    padding: 1.5rem 2rem;
+  }
+  max-width: 600px;
+
+  .c2form_container {
+    display: block !important;
+  }
+
+  h1, .c2form_intheader {
+    text-align: center;
+  }
+
+  .FormFieldReqMarker {
+    margin-left: 0.3rem;
+    color: $red;
+  }
+
+  .c2form_reqfields {
+    display: none;
+  }
+
+  .c2form_buttons {
+    .c2btnreset, .c2form_btnsep {
+      // No Reset Button
+      display: none;
+    }
+
+    .c2btnconfirmadd {
+      // Match Bootstrap Buttons
+      @extend .btn;
+      @extend .btn-primary;
+    }
+  }
+
+}
