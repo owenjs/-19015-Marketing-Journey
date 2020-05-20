@@ -4,9 +4,15 @@ import protoTypes from './app/protoTypes.js';
 import Survey from './app/enhancements/survey.js';
 import GroupSwitcher from './app/enhancements/groupSwitcher.js';
 import LoadingPanel from './app/tools/LoadingPanel.js';
+import { hideCMSMessages } from './app/tools/HideCMSMessages.js';
 
 function init(event) {
   // Init Function called on DOM Content Loaded
+
+  // On the Form Page, the form could error. Remove the Message Bar the CMS displays
+  hideCMSMessages();
+
+  // Build Loading Panel
   let loadingPanel = new LoadingPanel(document.querySelector(".c2-loading-panel"));
 
   let domSurvey = document.querySelector(".marketing-survey__form");
