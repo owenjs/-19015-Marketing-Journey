@@ -1,5 +1,8 @@
 // IN PRINT MODE
 @media print {
+  .p-d-none {
+    display: none;
+  }
   .ig-page--marketing-survey {
     overflow:visible;
     .main {
