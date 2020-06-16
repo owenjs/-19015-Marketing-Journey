@@ -9,6 +9,9 @@ import { hideCMSMessages } from './app/tools/HideCMSMessages.js';
 function init(event) {
   // Init Function called on DOM Content Loaded
 
+  // Remove all the .c2pgitm_wrap containers (Awful Hack...)
+  document.querySelectorAll(".c2pgitm_wrap").forEach(node => {node.replaceWith(...node.childNodes)});
+
   // On the Form Page, the form could error. Remove the Message Bar the CMS displays
   hideCMSMessages();
 
@@ -23,6 +26,7 @@ function init(event) {
     loadingPanel.setDone();
     return;
   }
+
   // Render the Survey into the exciting Form on the page
   survey.render(domSurvey.querySelector("form"));
 
